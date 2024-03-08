@@ -14,7 +14,7 @@ const sumSquare = (numArray) => {
   // Main operation
   return result = numArray.reduce((previous, current) => {
     return previous + Math.pow(current, 2);
-  });
+  }, 0);
 };
 
 console.log(sumSquare([0, 1, 2, 3, 4]));
