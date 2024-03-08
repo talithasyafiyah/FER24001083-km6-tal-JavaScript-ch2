@@ -12,9 +12,9 @@ const sumSquare = (numArray) => {
   // End of validation
 
   // Main operation
-  return (result = numArray.reduce((previous, current) => {
+  return result = numArray.reduce((previous, current) => {
     return previous + Math.pow(current, 2);
-  }));
+  });
 };
 
 console.log(sumSquare([0, 1, 2, 3, 4]));

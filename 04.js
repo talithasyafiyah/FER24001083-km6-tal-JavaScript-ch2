@@ -26,7 +26,7 @@ const dataPenjualanPakAldi = [
 ];
 
 const getTotalPenjualan = (dataPenjualan) => {
-  // Validasi Inputan
+  // Validation
   if (dataPenjualan === undefined) return "Error: Bro where is the parameter?";
   if (!Array.isArray(dataPenjualan)) return "Error: Invalid data type";
   if (dataPenjualan.length === 0) return "Error: Empty array";
@@ -34,6 +34,8 @@ const getTotalPenjualan = (dataPenjualan) => {
     return "Error: Object detected";
   // if (dataPenjualan.filter((e) => e.totalTerjual).length == 0)
   //   return "Error: Object detected";
+  // End of validation
+
 
   const totalPenjualan = dataPenjualan.reduce((previous, current) => {
     return previous + current.totalTerjual;

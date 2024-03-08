@@ -38,73 +38,68 @@ const dataPenjualanNovel = [
 ];
 
 const getInfoPenjualan = (dataPenjualan) => {
-  if (dataPenjualan !== undefined) {
-    if (dataPenjualan instanceof Array) {
-      if (dataPenjualan.length > 0) {
-        // Total Keuntungan
-        let totalKeuntungan = dataPenjualan.reduce((previous, current) => {
-          let keuntungan =
-            (current.hargaJual - current.hargaBeli) * current.totalTerjual;
-          return previous + keuntungan;
-        }, 0);
+  // Validation
+  if (dataPenjualan === undefined) return "Error: Bro where is the parameter?";
+  if (!Array.isArray(dataPenjualan)) return "Error: Invalid data type";
+  if (dataPenjualan.length === 0) return "Error: Empty array";
+  if (!dataPenjualan.find((e) => e.totalTerjual))
+    return "Error: Object detected";
+  // End of validation
 
-        // Total Modal
-        let totalModal = dataPenjualan.reduce((previous, current) => {
-          let modal =
-            current.hargaBeli * (current.totalTerjual + current.sisaStok);
-          return previous + modal;
-        }, 0);
+  // Total Keuntungan
+  let totalKeuntungan = dataPenjualan.reduce((previous, current) => {
+    let keuntungan =
+      (current.hargaJual - current.hargaBeli) * current.totalTerjual;
+    return previous + keuntungan;
+  }, 0);
 
-        // Persentase Keuntungan %
-        let persentaseKeuntungan = (totalKeuntungan / totalModal) * 100;
+  // Total Modal
+  let totalModal = dataPenjualan.reduce((previous, current) => {
+    let modal = current.hargaBeli * (current.totalTerjual + current.sisaStok);
+    return previous + modal;
+  }, 0);
 
-        // Mengurutkan Total Buku Terjual secara descending
-        let sortBuku = dataPenjualan.sort(
-          (previous, current) => current.totalTerjual - previous.totalTerjual
-        );
+  // Persentase Keuntungan %
+  let persentaseKeuntungan = (totalKeuntungan / totalModal) * 100;
 
-        // Nama Produk buku terlaris ada pada index pertama (0)
-        let produkBukuTerlaris = sortBuku[0].namaProduk;
+  // Mengurutkan Total Buku Terjual secara descending
+  let sortBuku = dataPenjualan.sort(
+    (previous, current) => current.totalTerjual - previous.totalTerjual
+  );
 
-        let penulisTerlaris = null;
-        let tempTerjual = 0;
+  // Nama Produk buku terlaris ada pada index pertama (0)
+  let produkBukuTerlaris = sortBuku[0].namaProduk;
 
-        // Mencari List Penulis Buku yang ada di data Penjualan
-        let penulisBuku = [
-          ...new Set(dataPenjualan.map((data) => data.penulis)),
-        ];
+  let penulisTerlaris = null;
+  let tempTerjual = 0;
 
-        penulisBuku.forEach((penulis) => {
-          let karya = dataPenjualan.filter((item) => item.penulis === penulis);
-          let karyaTerjual = karya.reduce((previous, current) => {
-            return previous + current.totalTerjual;
-          }, 0);
+  // Mencari List Penulis Buku yang ada di data Penjualan
+  let penulisBuku = [...new Set(dataPenjualan.map((data) => data.penulis))];
 
-          if (karyaTerjual > tempTerjual) {
-            tempTerjual = karyaTerjual;
-            penulisTerlaris = penulis;
-          }
-        });
+  penulisBuku.forEach((penulis) => {
+    let karya = dataPenjualan.filter((item) => item.penulis === penulis);
+    let karyaTerjual = karya.reduce((previous, current) => {
+      return previous + current.totalTerjual;
+    }, 0);
 
-        return {
-          totalKeuntungan: `Rp. ${totalKeuntungan.toLocaleString()}`,
-          totalModal: `Rp. ${totalModal.toLocaleString()}`,
-          persentaseKeuntungan: `${persentaseKeuntungan.toFixed(2)}%`,
-          produkBukuTerlaris: `BUKU TERLARIS BERDASARKAN DATA DI ATAS ${produkBukuTerlaris.toUpperCase()}`,
-          penulisTerlaris: `PENULIS TERLARIS BERDASARKAN DATA DI ATAS ${penulisTerlaris.toUpperCase()}`,
-        };
-      }
-      return "Error : Empty array";
+    if (karyaTerjual > tempTerjual) {
+      tempTerjual = karyaTerjual;
+      penulisTerlaris = penulis;
     }
-    return "Error : Invalid data type";
-  }
+  });
 
-  return "Error : Bro where is the parameter";
+  return {
+    totalKeuntungan: `Rp. ${totalKeuntungan.toLocaleString()}`,
+    totalModal: `Rp. ${totalModal.toLocaleString()}`,
+    persentaseKeuntungan: `${persentaseKeuntungan.toFixed(2)}%`,
+    produkBukuTerlaris: `BUKU TERLARIS BERDASARKAN DATA DI ATAS ${produkBukuTerlaris.toUpperCase()}`,
+    penulisTerlaris: `PENULIS TERLARIS BERDASARKAN DATA DI ATAS ${penulisTerlaris.toUpperCase()}`,
+  };
 };
 
 console.log(getInfoPenjualan(dataPenjualanNovel));
-// console.log(getInfoPenjualan({}));
-// console.log(getInfoPenjualan([]));
-// console.log(getInfoPenjualan());
-// console.log(getInfoPenjualan(0));
-// console.log(getInfoPenjualan("d"));
+console.log(getInfoPenjualan([]));
+console.log(getInfoPenjualan([{}]));
+console.log(getInfoPenjualan());
+console.log(getInfoPenjualan("a"));
+console.log(getInfoPenjualan(null));
